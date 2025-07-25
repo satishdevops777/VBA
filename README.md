@@ -24,6 +24,7 @@ Sub ProcessCreateOutputFile()
 - `wsInput`, `wsOutput`: worksheet objects.
 - `wbInput`, `wbOutput`: workbook objects.
 - `fdialog`: used to open folder picker.
+- ```A Folder Picker is a dialog box in Excel VBA that allows users to browse and select a folder from their file system, instead of typing the path manually. It's very useful when your macro       needs to access or save files in a specific directory chosen by the user at runtime.```
 - `inputSheetName`: stores name of the input sheet.
 - `outputFileName`, `baseName`: for output file naming.
 - `userAnswer`, `responseExists`: user response and file existence check.
