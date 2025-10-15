@@ -1,4 +1,104 @@
 ```vba
+Sub format_changeVer() 
+```
+is the declaration of a VBA macro (subroutine) named format_changeVer.
+```vba
+Dim target As String '入力ファイルのフルパス
+```
+- **Meaning:** Stores the **full path** of the input file (example: `"C:\Users\Satish\Documents\data.xlsx"`).  
+- **Use:** Helps VBA open or refer to a specific Excel file.  
+- **Comment translation:** “Full path of input file.”
+
+```vba
+Dim target_path As String '入力ファイルのパス
+```
+Meaning: Stores only the folder path part of target.
+Example: if target = "C:\data\report.xlsx", then target_path = "C:\data\".
+Comment translation: “Path of input file.”
+
+
+```vba
+Dim target_name As String '入力ファイルのファイル名
+```
+- **Meaning:** Stores just the **filename** (without the path).  
+- Example: `"report.xlsx"` or `"report.csv"`.  
+- **Comment translation:** “Filename of input file.”
+
+```vba
+Dim i As Long 'index
+```
+Meaning: Generic loop counter or index variable (commonly used in For i = 1 To N loops).
+Comment translation: “Index.”
+
+```vba
+Dim in_row As Long '入力ファイルの行カウンタ
+```
+- **Meaning:** Tracks the **current row number** being processed from the input file.  
+- Example: increments from row 2 to last row during reading.  
+- **Comment translation:** “Row counter for input file.”
+
+ ```vba
+Dim param() As String 'Paramシートのパラメタ
+```
+Meaning: Declares a dynamic string array used to store parameters (possibly from a “Param” worksheet).
+You can later use ReDim param(n) to size it dynamically.
+Comment translation: “Parameters from the Param sheet.”
+
+```vba
+Dim last_row As Long '入力ファイルの最終行
+```
+- **Meaning:** Stores the **last row number** in the input file that contains data.  
+- Often found via `Cells(Rows.Count, 1).End(xlUp).Row`.  
+- **Comment translation:** “Last row of input file.”
+
+---
+
+```vba
+Dim wb As Workbook '出力ファイルのオブジェクト
+```
+Meaning: A Workbook object representing the output Excel file.
+Used to reference and write results to a new or existing workbook.
+Comment translation: “Object for the output file.”
+
+```vba
+Dim out_row As Long '出力ファイルの行カウンタ
+```
+- **Meaning:** Tracks the **current row** being written in the output file.  
+- Example: starts at row 2 and increments as new data is added.  
+- **Comment translation:** “Row counter for output file.”
+
+
+```vba
+Dim out_flg As Boolean '出力フラグ
+```
+Meaning: A flag variable (True/False) used to control whether or not data should be output.
+Example:
+If out_flg = True Then
+    ' Write to output
+End If
+Comment translation: “Output flag.”
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```vba
 Option Explicit
 
 Sub format_changeVer()
@@ -47,7 +147,7 @@ Sub format_changeVer()
 
     '入力ファイルの明細を設定する
     in_row = 2
-    Do Until in_row > last_row
+    Do Until in_row > last_row + 1
         Workbooks(target_name).Worksheets("MEMBERS").Cells(in_row, 26).Value = in_row - 1
         If Workbooks(target_name).Worksheets("MEMBERS").Cells(in_row, 1).Value = "" Then
             Workbooks(target_name).Worksheets("MEMBERS").Cells(in_row, 27).Value = "1"
@@ -61,10 +161,8 @@ Sub format_changeVer()
     Set wb = Workbooks.Add
 
     '出力ファイルのヘッダを設定する
-    On Error Resume Next
+  
     wb.Worksheets(1).Name = "MEMBERS_" & Left(target_name, InStr(target_name, "00") - 1)
-    On Error GoTo 0
-
     wb.Worksheets(1).Range("A1").Value = "Group"
     wb.Worksheets(1).Range("B1").Value = "Group Owners"
     wb.Worksheets(1).Range("C1").Value = "Group Recert"
@@ -163,11 +261,9 @@ Sub format_changeVer()
     End With
 
     '不要なシートを削除
-    Application.DisplayAlerts = False
     Do While wb.Worksheets.Count > 1
         wb.Worksheets(2).Delete
     Loop
-    Application.DisplayAlerts = True
 
     '出力ファイルを保存する
     wb.SaveAs target_path & Replace(target_name, ".xlsx", "") & "_Member.xlsx"
